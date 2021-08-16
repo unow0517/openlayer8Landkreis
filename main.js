@@ -69,7 +69,7 @@ function init(){
   var labelStyle = new ol.style.Style({
     text: new ol.style.Text({
       font: '20px sans-serif',
-      overflow: true
+      overflow: true,
     }),
     geometry: function(feature){
       var geomtr = feature.getGeometry();
@@ -128,9 +128,8 @@ function init(){
       labelStyle.getText().setText(feature.get('Name'))
       return style;
     },
-    declutter: true
+    declutter: true,
   })
-
   //add Bodelshausen shape
   var bodelshausen = new ol.layer.Vector({
     title: 'bodelshausen',
@@ -223,4 +222,56 @@ function init(){
   })
   
   map.addLayer(landkreis)
+
+  //highlight when mouse-over
+  //MouseOver label style
+  var labelStyleMO = new ol.style.Style({
+    text: new ol.style.Text({
+      font: '20px sans-serif',
+      overflow: true,
+      fill: new ol.style.Fill({
+        color: 'white'
+      })
+    }),
+    geometry: function(feature){
+      var geomtr = feature.getGeometry();
+      if (geomtr.getType() == 'MultiPolygon'){
+        var polygons = geomtr.getPolygons();
+        var widest = 0;
+        for (var i = 0, ii = polygons.length; i< ii; ++i){
+          var polygon = polygons[i];
+          var width = ol.extent.getWidth(polygon.getExtent());
+          if(width > widest){
+            widest = width;
+            geomtr = polygon;
+          }
+        }
+      }
+      return geomtr;
+    },
+    
+  })
+
+  //MouseOver polygonstyle
+  var polygonStyleMO = new ol.style.Style({
+    stroke: new ol.style.Stroke({
+      color: 'white',
+      width: 2
+    }),
+    fill: new ol.style.Fill({
+      color: 'rgba(0,0,255,0.6)'
+    }),
+  })
+  
+  var styleMO = [labelStyleMO,polygonStyleMO]
+
+  var selectPointerMove = new ol.interaction.Select({
+    condition: ol.events.condition.pointerMove,
+    style: function(feature){
+      labelStyleMO.getText().setText(feature.get('Name'))
+      return styleMO;
+    }
+  });
+  // add interaction
+  map.addInteraction(selectPointerMove)
 }
