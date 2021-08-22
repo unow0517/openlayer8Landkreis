@@ -60,7 +60,7 @@ function init(){
   layerSwitcher.renderPanel();
 
   ////////////////////////
-  //MAKE landkreis Polygon
+  //style for polygons////
   ////////////////////////
 
   //decluttering https://www.giserdqy.com/wp-content/guids/ol-v4.6.5/examples/vector-label-decluttering.html == prevent labels overlapped.
@@ -103,6 +103,10 @@ function init(){
 
   var style = [labelStyle,polygonStyle]
 
+  /////////////////////////////
+  //Add landkreis shape files//
+  /////////////////////////////
+
   //add alb-donau-kreis shape
   var adk = new ol.layer.Vector({
     title: 'alb-donau-kreis',
@@ -111,7 +115,9 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      //labelstyle.getText() == new ol.style.Text
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetX(0)
       return style;
     },
     declutter: true
@@ -125,7 +131,8 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(30)
       return style;
     },
     declutter: true,
@@ -138,7 +145,9 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(0)
+      labelStyle.getText().setOffsetX(20)
       return style;
     },
     declutter: true
@@ -152,7 +161,8 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(10)
       return style;
     },
     declutter: true
@@ -166,7 +176,9 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(5)
+      labelStyle.getText().setOffsetX(20)
       return style;
     },
     declutter: true
@@ -180,7 +192,7 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      labelStyle.getText().setText(feature.get('NAME_3'))
       return style;
     },
     declutter: true
@@ -194,7 +206,9 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(0)
+      labelStyle.getText().setOffsetX(-40)
       return style;
     },
     declutter: true
@@ -208,7 +222,41 @@ function init(){
       format: new ol.format.GeoJSON()
     }),
     style: function(feature){
-      labelStyle.getText().setText(feature.get('Name'))
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(0)
+      labelStyle.getText().setOffsetX(-50)
+      return style;
+    },
+    declutter: true
+  })
+
+  //add Freudenstadt shape
+  var fds = new ol.layer.Vector({
+    title: 'freudenstadt',
+    source: new ol.source.Vector({
+      url: 'Polygons/FDS.geojson',
+      format: new ol.format.GeoJSON()
+    }),
+    style: function(feature){
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(0)
+      labelStyle.getText().setOffsetX(-50)
+      return style;
+    },
+    declutter: true
+  })
+
+  //add Ravensburg shape
+  var rv = new ol.layer.Vector({
+    title: 'ravensburg',
+    source: new ol.source.Vector({
+      url: 'Polygons/RV4326.geojson',
+      format: new ol.format.GeoJSON()
+    }),
+    style: function(feature){
+      labelStyle.getText().setText(feature.get('NAME_3'))
+      labelStyle.getText().setOffsetY(0)
+      labelStyle.getText().setOffsetX(-50)
       return style;
     },
     declutter: true
@@ -218,7 +266,7 @@ function init(){
   //landkreis group
   var landkreis = new ol.layer.Group({
     title: 'landkreis',
-    layers: [adk,bib, bodelshausen,bsk,hirringen,oak,reu,zak]
+    layers: [adk,bib, bodelshausen,bsk,hirringen,oak,reu,zak,fds,rv]
   })
   
   map.addLayer(landkreis)
@@ -252,6 +300,10 @@ function init(){
     
   })
 
+  ///////////////////////
+  //Mouseover Highlight//
+  ///////////////////////
+
   //MouseOver polygonstyle
   var polygonStyleMO = new ol.style.Style({
     stroke: new ol.style.Stroke({
@@ -268,10 +320,23 @@ function init(){
   var selectPointerMove = new ol.interaction.Select({
     condition: ol.events.condition.pointerMove,
     style: function(feature){
-      labelStyleMO.getText().setText(feature.get('Name'))
+      // labelStyleMO.getText().setText(feature.get('Name'))
       return styleMO;
     }
   });
   // add interaction
   map.addInteraction(selectPointerMove)
+
+  ////////////////////////////////
+  //Show Polygon Info on sidebar//
+  ////////////////////////////////
+
+  var polyInfo = document.getElementById('poInfo')
+
+  map.on('click', function(e){
+    map.forEachFeatureAtPixel(e.pixel, function(feature, layer){
+      let clickedFeatureName = feature.get('Name')
+      polyInfo.innerHTML = clickedFeatureName;
+    })
+  })
 }
