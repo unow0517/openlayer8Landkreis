@@ -34,7 +34,7 @@ function init(){
   var view = new ol.View({
     projection: 'EPSG:4326',
     center: [9.5,48.3],
-    zoom: 10
+    zoom: 9
   });
 
   var map = new ol.Map({
@@ -133,6 +133,7 @@ function init(){
     style: function(feature){
       labelStyle.getText().setText(feature.get('NAME_3'))
       labelStyle.getText().setOffsetY(30)
+      labelStyle.getText().setOffsetX(20)
       return style;
     },
     declutter: true,
@@ -224,7 +225,7 @@ function init(){
     style: function(feature){
       labelStyle.getText().setText(feature.get('NAME_3'))
       labelStyle.getText().setOffsetY(0)
-      labelStyle.getText().setOffsetX(-50)
+      labelStyle.getText().setOffsetX(0)
       return style;
     },
     declutter: true
@@ -256,7 +257,7 @@ function init(){
     style: function(feature){
       labelStyle.getText().setText(feature.get('NAME_3'))
       labelStyle.getText().setOffsetY(0)
-      labelStyle.getText().setOffsetX(-50)
+      labelStyle.getText().setOffsetX(0)
       return style;
     },
     declutter: true
@@ -331,12 +332,19 @@ function init(){
   //Show Polygon Info on sidebar//
   ////////////////////////////////
 
-  var polyInfo = document.getElementById('poInfo')
+  var name = document.getElementById('name')
+  var residents = document.getElementById('residents')
+
 
   map.on('click', function(e){
-    map.forEachFeatureAtPixel(e.pixel, function(feature, layer){
-      let clickedFeatureName = feature.get('Name')
-      polyInfo.innerHTML = clickedFeatureName;
+    map.forEachFeatureAtPixel(e.pixel, function(feature){
+      let clickedFeatureName = feature.get('NAME_3')
+      let clickedFeatureResidents = feature.get('Residents')
+      name.innerHTML = clickedFeatureName;
+      residents.innerHTML = clickedFeatureResidents;
     })
   })
+
+  var zoom = map.getView().getZoom();
+  console.log(zoom)
 }
