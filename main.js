@@ -337,6 +337,8 @@ function init(){
 
 
   map.on('click', function(e){
+    name.innerHTML = '&nbsp;'
+    residents.innerHTML = '&nbsp;'
     map.forEachFeatureAtPixel(e.pixel, function(feature){
       let clickedFeatureName = feature.get('NAME_3')
       let clickedFeatureResidents = feature.get('Residents')

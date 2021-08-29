@@ -19,16 +19,31 @@
     <div class="grid-container">
       <div class="grid-1">
         <div class="sidebar">
-          <span>Click the polygon</span>
-          <div>
-            <p>name</p>
-            <div id="name">&nbsp;</div>
+          <p class='clickpolygon'><strong>Click the polygon</strong></p>
+          <div class='polyproperties'>
+            <p class='polyproperty'><strong>Name :</strong></p>
+            <div class = 'polyvalue' id="name">&nbsp;</div>
           </div>
-          <div>
-            <p>residents</p>
-            <div id="residents">&nbsp;</div>
+          <div class='polyproperties'>
+            <p class='polyproperty'><strong>Residents (year of survey) :</strong></p>
+            <div class = 'polyvalue' id="residents">&nbsp;</div>
           </div>
-          
+          <br>
+          <br>
+          <div>
+            <p class = 'explanation'> Shape files are exported as GEOJSON file in QGIS. Based on javascript library 
+            'Openlayer', shape files can be displayed as well as their attributes.
+            </p>
+            <br>
+            <br>
+            <p class = 'explanation'>
+              further development possibility is to connect this webpage with data in Geoserver and administrator
+              can add or remove data. I will make it work later on.
+            </p>
+          </div>
+          <div class='copyright'>
+            <span > &copy;YunHo made a lot of effort on it 2021</span>
+          </div>
         </div>
       </div>
       <div class="grid-2">
